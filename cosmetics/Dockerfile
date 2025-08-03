@@ -1,4 +1,3 @@
-# Use official PHP image with extensions needed for Laravel
 FROM php:8.2-fpm
 
 # Install system dependencies
@@ -16,26 +15,27 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-RUN docker-php-ext-install pdo_mysql mbstring bcmath zip
-
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www
 
-# Copy existing application directory contents
-COPY . .
+# ✅ Copy only composer files first
+COPY composer.json composer.lock ./
 
-# Install PHP dependencies
+# ✅ Install PHP dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Set permissions (may vary depending on your Laravel version)
-RUN chown -R www-data:www-data \
-    /var/www/storage \
-    /var/www/bootstrap/cache
+# ✅ Now copy the rest of the app
+COPY . .
 
-# Expose port 8000 (Laravel default with artisan serve)
+# Set permissions
+RUN chown -R www-data:www-data \
+    storage \
+    bootstrap/cache
+
+# Expose port 8000
 EXPOSE 8000
 
 # Start Laravel dev server
