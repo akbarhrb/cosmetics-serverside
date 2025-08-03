@@ -1,3 +1,4 @@
+# Use official PHP image with required extensions
 FROM php:8.2-fpm
 
 # Install system dependencies
@@ -21,22 +22,20 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# ✅ Copy only composer files first
+# Copy composer files first (enables caching of vendor dependencies)
 COPY composer.json composer.lock ./
 
-# ✅ Install PHP dependencies
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+# Install PHP dependencies (skip post-create-project scripts like artisan migrate)
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
-# ✅ Now copy the rest of the app
+# Now copy the rest of the application
 COPY . .
 
-# Set permissions
-RUN chown -R www-data:www-data \
-    storage \
-    bootstrap/cache
+# Set file/folder permissions for Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expose port 8000
+# Expose Laravel dev server port
 EXPOSE 8000
 
-# Start Laravel dev server
-CMD php artisan serve --host=0.0.0.0 --port=8000
+# Run Laravel app with Artisan server
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
