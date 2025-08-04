@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Wait for the database to be ready
-echo "Waiting for MySQL to be available..."
+echo "Waiting for PostgreSQL to be available..."
 
-until php artisan db:connect --no-interaction; do
-  >&2 echo "MySQL is unavailable - sleeping"
+# Try to connect to the database by checking migration status
+until php artisan migrate:status > /dev/null 2>&1; do
+  >&2 echo "PostgreSQL is unavailable - sleeping"
   sleep 3
 done
 
-echo "MySQL is up - running migrations..."
+echo "PostgreSQL is up - running migrations..."
 php artisan migrate --force
 
 echo "Starting Laravel server..."
