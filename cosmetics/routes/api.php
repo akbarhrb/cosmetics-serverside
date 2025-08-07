@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -7,3 +8,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health', function () {
     return response()->json(['message' => 'API is working']);
 });
+
+//categories
+Route::post('/add-category' , [CategoryController::class , 'store'])->name('categories.add');
