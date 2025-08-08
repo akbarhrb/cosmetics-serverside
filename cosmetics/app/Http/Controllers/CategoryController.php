@@ -8,23 +8,24 @@ use Illuminate\Http\Request;
 
 class CategoryController
 {
+    public function index(){
+        $categories = Category::all();
+        return response()->json([
+            'message' => 'this endpoint returns all categories',
+            "data" => $categories
+        ]);
+    }
     public function store(Request $request){
         $validated = $request->validate([
             "cat_name" => 'required|string|max:255',
         ]);
-        try{
-            $category = Category::create([
-                'cat_name' => $validated['cat_name']
-            ]);
-            return response()->json([
-                'message' => 'Category created successfully',
-                'data' => $category,
-            ], 201);
-        }catch(Exception $e){
-            return response()->json([
-                'message' => 'Unexpected error occurred.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        
+        $category = Category::create([
+            'cat_name' => $validated['cat_name']
+        ]);
+        return response()->json([
+            'message' => 'Category created successfully',
+            'data' => $category,
+        ], 201);
     }
 }

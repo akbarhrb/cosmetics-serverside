@@ -11,3 +11,4 @@ Route::get('/health', function () {
 
 //categories
 Route::post('/add-category' , [CategoryController::class , 'store'])->name('categories.add');
+Route::get('/add-category' , [CategoryController::class , 'store'])->name('categories.add');
