@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PharmacyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -11,10 +12,12 @@ Route::get('/health', function () {
 
 //pharmacies
 // index - store - update - delete
+Route::get('/pharmacies' , [PharmacyController::class , 'index']);
+
 
 //categories
-Route::get('/categories' , [CategoryController::class , 'index'])->name('categories.index');
-Route::post('/add-category' , [CategoryController::class , 'store'])->name('categories.add');
+Route::get('/categories' , [CategoryController::class , 'index']);
+Route::post('/add-category' , [CategoryController::class , 'store']);
 
 //items
 // index - add - update - delete - resolve missing items

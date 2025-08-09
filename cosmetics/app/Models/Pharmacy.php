@@ -12,4 +12,7 @@ class Pharmacy extends Model
         'phone_number',
         'address',
     ];
+    public function receipts(){
+        return $this->hasMany(Receipt::class);
+    }
 }

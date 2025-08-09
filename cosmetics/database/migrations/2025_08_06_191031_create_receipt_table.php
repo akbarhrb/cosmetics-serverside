@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('receipts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pharmacy_id')->constrained()->onDelete('cascade');
-            $table->string('receipt_total');
+            $table->decimal('receipt_total')->default(0);
             $table->enum('status' , ['draft','pending','closed','deleted'])->default('pending');
             $table->timestamps();
         });

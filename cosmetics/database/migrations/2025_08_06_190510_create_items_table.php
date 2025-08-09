@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('item_name');
             $table->string('item_color')->nullable();
             $table->integer('quantity')->default(0);
-            $table->integer('price_unit_ind')->default(0);
-            $table->integer('price_dozen')->default(0);
-            $table->integer('price_unit_ph')->default(0);
-            $table->integer('cost');
+            $table->decimal('price_unit_ind')->default(0);
+            $table->decimal('price_dozen')->default(0);
+            $table->decimal('price_unit_ph')->default(0);
+            $table->decimal('cost');
             $table->string('description')->nullable();
             $table->timestamps();
         });
