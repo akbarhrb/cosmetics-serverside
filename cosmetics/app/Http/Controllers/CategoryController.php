@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use Exception;
 use Illuminate\Http\Request;
 
 class CategoryController
@@ -19,7 +18,7 @@ class CategoryController
         $validated = $request->validate([
             "cat_name" => 'required|string|max:255',
         ]);
-        
+
         $category = Category::create([
             'cat_name' => $validated['cat_name']
         ]);

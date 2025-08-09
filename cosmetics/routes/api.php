@@ -9,6 +9,18 @@ Route::get('/health', function () {
     return response()->json(['message' => 'API is working']);
 });
 
+//pharmacies
+// index - store - update - delete
+
 //categories
+Route::get('/categories' , [CategoryController::class , 'index'])->name('categories.index');
 Route::post('/add-category' , [CategoryController::class , 'store'])->name('categories.add');
-Route::get('/add-category' , [CategoryController::class , 'store'])->name('categories.add');
+
+//items
+// index - add - update - delete - resolve missing items
+
+//receipts
+//index - store - update status - update - delete
+
+//receipt-items
+// index - store - update - delete
