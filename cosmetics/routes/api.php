@@ -16,25 +16,27 @@ Route::get('/health', function () {
 //pharmacies
 Route::get('/pharmacies' , [PharmacyController::class, 'index']);
 Route::post('/add-pharmacy' , [PharmacyController::class, 'store']);
-Route::post('/update-pharmacy/{pharmacy_id}' , [PharmacyController::class, 'update']);
-Route::post('/delete-pharmacy/{pharmacy_id}' , [PharmacyController::class, 'destroy']);
+Route::put('/update-pharmacy/{pharmacy_id}' , [PharmacyController::class, 'update']);
+Route::delete('/delete-pharmacy/{pharmacy_id}' , [PharmacyController::class, 'destroy']);
 
 //categories
 Route::get('/categories' , [CategoryController::class, 'index']);
 Route::post('/add-category' , [CategoryController::class, 'store']);
+Route::post('/update-category/{cat_id}', [CategoryController::class, 'update']);
+Route::delete('/delete-category/{cat_id}', [CategoryController::class, 'delete']);
 
 //items
 Route::get('/items' , [ItemController::class, 'index']);
 Route::post('/add-item' , [ItemController::class, 'store']);
-Route::post('/update-item/{item_id}' , [ItemController::class, 'update']);
-Route::post('/delete-item/{item_id}' , [ItemController::class, 'destroy']);
+Route::put('/update-item/{item_id}' , [ItemController::class, 'update']);
+Route::delete('/delete-item/{item_id}' , [ItemController::class, 'destroy']);
 
 //receipts
 //index - store - update status - update - delete
 Route::get('/receipts' , [ReceiptController::class, 'index']);
 Route::post('/add-receipt' , [ReceiptController::class, 'store']);
-Route::put('/update-r-status/{receipt_id}' , [ReceiptController::class, 'updateStatus']);
-Route::post('/update-receipt/{receipt_id}' , [ReceiptController::class, 'update']);
+Route::patch('/update-r-status/{receipt_id}' , [ReceiptController::class, 'updateStatus']);
+Route::put('/update-receipt/{receipt_id}' , [ReceiptController::class, 'update']);
 Route::delete('/delete-receipt/{receipt_id}' , [ReceiptController::class, 'destroy']);
 
 //receipt-items
