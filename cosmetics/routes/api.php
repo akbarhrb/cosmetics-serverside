@@ -41,6 +41,6 @@ Route::delete('/delete-receipt/{receipt_id}' , [ReceiptController::class, 'destr
 
 //receipt-items
 Route::get('/receipt/{receipt_id}/items', [ReceiptItemController::class, 'index']);
-Route::post('/add-receipt-item', [ReceiptItemController::class, 'store']);
+Route::post('/add-receipt-items', [ReceiptItemController::class, 'store']);
 Route::put('/receipt-item/{id}', [ReceiptItemController::class, 'update']);
 Route::delete('/receipt-item/{id}', [ReceiptItemController::class, 'destroy']);

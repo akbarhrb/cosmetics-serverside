@@ -33,19 +33,24 @@ class ReceiptItemController extends Controller
     public function store(Request $request)
     {
         try {
+            $createdItems = [];
             $validated = $request->validate([
+                'receipt_items' => 'required|array',
                 'receipt_id' => 'required|exists:receipts,id',
-                'price'      => 'required|decimal:1,2|min:0',
-                'item_id'    => 'required|exists:items,id',
-                'quantity'   => 'required|integer|min:1',
-                'total'      => 'required|numeric|min:0',
+                'receipt_items.*.price' => 'required|numeric|min:0',
+                'receipt_items.*.item_id' => 'required|exists:items,id',
+                'receipt_items.*.quantity' => 'required|integer|min:1',
+                'receipt_items.*.total' => 'required|numeric|min:0',
             ]);
+            foreach($validated['receipt_items'] as $receipt_item){
 
-            $receiptItem = ReceiptItem::create($validated);
+                $receiptItem = ReceiptItem::create($receipt_item);
+                $createdItems[] = $receipt_item;
+            }
 
             return response()->json([
-                'message' => 'Receipt item created successfully',
-                'data' => $receiptItem
+                'message' => 'Receipt items created successfully',
+                'data' => $createdItems
             ], 201);
 
         } catch (ValidationException $e) {

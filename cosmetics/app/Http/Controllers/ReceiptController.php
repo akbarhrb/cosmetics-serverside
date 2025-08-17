@@ -31,7 +31,7 @@ class ReceiptController
     {
         try {
             $validated = $request->validate([
-                'pharmacy_id'   => 'required|exists:pharmacies,id',
+                'pharmacy_id'   => 'required|string|exists:pharmacies,id',
             ]);
 
             $receipt = Receipt::create($validated);
