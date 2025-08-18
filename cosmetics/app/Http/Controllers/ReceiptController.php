@@ -26,6 +26,30 @@ class ReceiptController
             ], 500);
         }
     }
+    public function show($request){
+        try{
+            $validated = $request->validate([
+                'receipt_id' => 'required|integar|exists:receipts,id',
+            ]);
+            $receipt = Receipt::findOrFail($validated['receipt_id']);
+
+            return response()->json([
+                'message' => "this endpoint returns specific receipt",
+                'data' => $receipt
+            ]);
+        }catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors'  => $e->errors()
+            ], 422);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Unexpected error occurred',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
 
     public function store(Request $request)
     {

@@ -73,7 +73,7 @@ class ItemController
             return response()->json([
                 'message' => 'Item updated successfully',
                 'data' => $item
-            ]);
+            ],201);
         }catch(ValidationException $e){
             return response()->json([
                 'message' => 'validation error occured',
@@ -95,12 +95,12 @@ class ItemController
             return response()->json([
                 'message' => "{$item->item_name} deleted successfully",
                 'data' => $item
-            ]);
+            ], 201);
         }catch(Exception $e){
             return response()->json([
                 'message' => "error occured",
                 'error' => $e->getMessage()
-            ]);
+            ], 500);
         }
     }
 }
