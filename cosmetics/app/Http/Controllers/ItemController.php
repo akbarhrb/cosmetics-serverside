@@ -21,7 +21,8 @@ class ItemController
     }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        try{
+            $validated = $request->validate([
                 'category_id'    => 'required|exists:categories,id',
                 'item_name'      => 'required|string|max:255|unique:items,item_name',
                 'item_color'     => 'nullable|string|max:100',
@@ -31,22 +32,19 @@ class ItemController
                 'price_unit_ph'  => 'required|integer|min:0',
                 'cost'           => 'required|integer|min:0',
                 'description'    => 'nullable|string',
-            ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation failed.',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-        try {
-            $item = Item::create($validator->validated());
+            ]);
+            $item = Item::create($validated);
 
             return response()->json([
                 'message' => 'Item created successfully',
                 'data' => $item
             ], 201);
-
+        }catch(ValidationException $e){
+            return response()->json([
+                'message' => 'Validation failed.',
+                'errors' => $e->errors()
+            ], 422);
         }catch (Exception $e) {
             return response()->json([
                 'message' => 'Unexpected error occurred.',
