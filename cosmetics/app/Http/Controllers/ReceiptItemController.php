@@ -43,9 +43,9 @@ class ReceiptItemController extends Controller
                 'receipt_items.*.total' => 'required|numeric|min:0',
             ]);
             foreach($validated['receipt_items'] as $receipt_item){
-
+                $receipt_item['receipt_id'] = $validated['receipt_id'];
                 $receiptItem = ReceiptItem::create($receipt_item);
-                $createdItems[] = $receipt_item;
+                $createdItems[] = $receiptItem;
             }
 
             return response()->json([
