@@ -50,6 +50,33 @@ class ReceiptController
             ], 500);
         }
     }
+    public function receipts(String $status){
+
+        try{
+            $allowedStatuses = ['pending', 'draft', 'closed' , 'deleted'];
+
+            if (!in_array($status, $allowedStatuses)) {
+                return response()->json([
+                    'message' => "Invalid status provided",
+                    'status'  => $status
+                ], 422);
+            }
+
+            $receipts = Receipt::where('status', $status)->with(['receiptItems', 'pharmacy'])->get();
+
+            return response()->json([
+                'message'  => "Receipts fetched successfully",
+                'status'   => $status,
+                'receipts' => $receipts
+            ], 200);
+
+        }catch(Exception $e){
+            return response()->json([
+                'message' => "Error occured",
+                'error' => $e->getMessage()
+            ],500);
+        }
+    }
 
     public function store(Request $request)
     {

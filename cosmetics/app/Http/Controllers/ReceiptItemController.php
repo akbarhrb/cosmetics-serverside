@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pharmacy;
+use App\Models\Receipt;
 use App\Models\ReceiptItem;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,10 +18,11 @@ class ReceiptItemController extends Controller
             $receiptItems = ReceiptItem::where('receipt_id', $receipt_id)
                 ->with(['receipt', 'item'])
                 ->get();
-
+            $pharmacy = Pharmacy::find($receiptItems[0]->receipt);
             return response()->json([
                 'message' => 'All receipt items retrieved successfully',
-                'data' => $receiptItems
+                'data' => $receiptItems,
+                'pharmacy'=> $pharmacy
             ], 200);
 
         } catch (Exception $e) {
@@ -42,11 +45,18 @@ class ReceiptItemController extends Controller
                 'receipt_items.*.quantity' => 'required|integer|min:1',
                 'receipt_items.*.total' => 'required|numeric|min:0',
             ]);
+
+            $receipt_total = 0;
+
             foreach($validated['receipt_items'] as $receipt_item){
                 $receipt_item['receipt_id'] = $validated['receipt_id'];
                 $receiptItem = ReceiptItem::create($receipt_item);
                 $createdItems[] = $receiptItem;
+                $receipt_total += $receipt_item['total'];
             }
+            $receipt = Receipt::find($validated['receipt_id']);
+            $receipt->receipt_total = $receipt->receipt_total + $receipt_total;
+            $receipt->save();
 
             return response()->json([
                 'message' => 'Receipt items created successfully',

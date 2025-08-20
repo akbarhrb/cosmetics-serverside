@@ -34,6 +34,8 @@ Route::delete('/delete-item/{item_id}' , [ItemController::class, 'destroy']);
 //receipts
 //index - store - update status - update - delete
 Route::get('/receipts' , [ReceiptController::class, 'index']);
+Route::post('/receipt' , [ReceiptController::class, 'show']);
+Route::get('/receipts/{status}' , [ReceiptController::class, 'receipts']);
 Route::post('/add-receipt' , [ReceiptController::class, 'store']);
 Route::patch('/update-r-status/{receipt_id}' , [ReceiptController::class, 'updateStatus']);
 Route::put('/update-receipt/{receipt_id}' , [ReceiptController::class, 'update']);
