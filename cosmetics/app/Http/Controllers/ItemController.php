@@ -27,10 +27,10 @@ class ItemController
                 'item_name'      => 'required|string|max:255|unique:items,item_name',
                 'item_color'     => 'nullable|string|max:100',
                 'quantity'       => 'required|integer|min:0',
-                'price_unit_ind' => 'required|integer|min:0',
-                'price_dozen'    => 'required|integer|min:0',
-                'price_unit_ph'  => 'required|integer|min:0',
-                'cost'           => 'required|integer|min:0',
+                'price_unit_ind' => 'required|numeric|min:0',
+                'price_dozen'    => 'required|numeric|min:0',
+                'price_unit_ph'  => 'required|numeric|min:0',
+                'cost'           => 'required|numeric|min:0',
                 'description'    => 'nullable|string',
 
             ]);
@@ -62,10 +62,10 @@ class ItemController
                 'item_name'      => 'required|string|max:255',
                 'item_color'     => 'nullable|string|max:100',
                 'quantity'       => 'required|integer|min:0',
-                'price_unit_ind' => 'required|integer|min:0',
-                'price_dozen'    => 'required|integer|min:0',
-                'price_unit_ph'  => 'required|integer|min:0',
-                'cost'           => 'required|integer|min:0',
+                'price_unit_ind' => 'required|numeric|min:0',
+                'price_dozen'    => 'required|numeric|min:0',
+                'price_unit_ph'  => 'required|numeric|min:0',
+                'cost'           => 'required|numeric|min:0',
                 'description'    => 'nullable|string',
             ]);
             $item->update($validated);
