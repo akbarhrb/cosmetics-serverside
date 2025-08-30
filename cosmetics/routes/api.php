@@ -5,6 +5,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PharmacyController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\ReceiptItemController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,3 +47,6 @@ Route::get('/receipt/{receipt_id}/items', [ReceiptItemController::class, 'index'
 Route::post('/add-receipt-items', [ReceiptItemController::class, 'store']);
 Route::put('/receipt-item/{id}', [ReceiptItemController::class, 'update']);
 Route::delete('/receipt-item/{id}', [ReceiptItemController::class, 'destroy']);
+
+//report
+Route::post('/report',[ReportController::class, 'index']);
