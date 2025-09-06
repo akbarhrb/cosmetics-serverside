@@ -40,6 +40,7 @@ Route::get('/receipts/{status}' , [ReceiptController::class, 'receipts']);
 Route::post('/add-receipt' , [ReceiptController::class, 'store']);
 Route::patch('/update-r-status/{receipt_id}' , [ReceiptController::class, 'updateStatus']);
 Route::put('/update-receipt/{receipt_id}' , [ReceiptController::class, 'update']);
+Route::post('/close-receipt', [ReceiptController::class, 'closeReceipt']);
 Route::delete('/delete-receipt/{receipt_id}' , [ReceiptController::class, 'destroy']);
 
 //receipt-items

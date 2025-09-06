@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
 use App\Models\Receipt;
+use App\Models\ReceiptItem;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -29,7 +31,7 @@ class ReceiptController
     public function show($request){
         try{
             $validated = $request->validate([
-                'receipt_id' => 'required|integar|exists:receipts,id',
+                'receipt_id' => 'required|integer|exists:receipts,id',
             ]);
             $receipt = Receipt::findOrFail($validated['receipt_id']);
 
@@ -159,6 +161,37 @@ class ReceiptController
             ], 422);
 
         } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Unexpected error occurred',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function closeReceipt(Request $request){
+        try{
+            $validated = $request->validate([
+                'receipt_id' => 'required|integer|exists:receipts,id'
+            ]);
+            $receipt = Receipt::findOrFail($validated['receipt_id']);
+            $receiptItems = ReceiptItem::where('receipt_id' , $validated['receipt_id'])->get();
+
+            foreach($receiptItems as $receiptItem){
+                $item = Item::findOrFail($receiptItem->item_id);
+                $item->quantity = $item->quantity - $receiptItem->quantity;
+                $item->save();
+            }
+            $receipt->update(['status' => 'closed']);
+
+            return response()->json([
+                'message' => 'Receipt closed successfully'
+            ], 200);
+
+        }catch(ValidationException $e){
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors'  => $e->errors()
+            ], 422);
+        }catch(Exception $e){
             return response()->json([
                 'message' => 'Unexpected error occurred',
                 'error'   => $e->getMessage()
