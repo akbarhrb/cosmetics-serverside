@@ -21,10 +21,13 @@ class ReportController
             ]);
             $total_items = Item::where('quantity' , '>' , 0)->get();
             $pharmacies = Pharmacy::where('status' , 'opened')->get();
-            $receipts = Receipt::whereBetween('created_at', [
-                $validated['from_date'] . ' 00:00:00',
-                $validated['to_date']   . ' 23:59:59'
-            ])->get();
+            $receipts = Receipt::
+                where('status' , 'closed')
+                ->whereBetween('created_at', [
+                    $validated['from_date'] . ' 00:00:00',
+                    $validated['to_date']   . ' 23:59:59'
+                ])
+                ->get();
 
             $receipts_total = $receipts->sum('receipt_total');
 
@@ -58,4 +61,58 @@ class ReportController
             ],500);
         }
     }
+    public function requiredItems()
+    {
+        try {
+            $pendingReceipts = Receipt::where('status', 'pending')->pluck('id');
+
+            // Get all pending receipt items
+            $allItems = ReceiptItem::whereIn('receipt_id', $pendingReceipts)->get();
+
+            // Group by item_id
+            $groupedItems = $allItems->groupBy('item_id');
+
+            // Get all item_ids
+            $itemIds = $groupedItems->keys();
+
+            // Fetch the corresponding item details
+            $items = Item::whereIn('id', $itemIds)->get()->keyBy('id');
+
+            $result = [];
+
+            foreach ($groupedItems as $itemId => $receiptItems) {
+                $item = $items->get($itemId);
+
+                $required = $receiptItems->sum('quantity');
+                $available = $item->quantity ?? 0;
+                $remaining = $available - $required;
+                $missing = 0;
+                if($remaining < 0){
+                    $missing = -$remaining;
+                }
+
+                $result[] = [
+                    'item_id' => $itemId,
+                    'item_name' => $item->item_name ?? 'Unknown',
+                    'available' => $available,
+                    'required' => $required,
+                    'missing' => $missing,
+                    'remaining' => $remaining,
+                ];
+            }
+
+            return response()->json([
+                'message' => 'Stock data calculated successfully',
+                'data' => $result
+            ], 200);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Error occurred',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
+
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Item;
+use App\Models\Receipt;
+use App\Models\ReceiptItem;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -82,6 +84,41 @@ class ItemController
         }catch (Exception $e) {
             return response()->json([
                 'message' => 'Unexpected error occurred.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function resolveMissingItems(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'missing' => 'required|array'
+            ]);
+
+            foreach ($validated['missing'] as $missing) {
+                if($missing['missing'] == 0){
+                    continue;
+                }
+                $item = Item::find($missing['item_id']);
+
+                if ($item) {
+                    $item->quantity += $missing['missing'];
+                    $item->save();
+                }
+            }
+
+            return response()->json([
+                'message' => 'Missing quantities resolved by setting item quantities to zero.'
+            ], 201);
+
+        } catch(ValidationException $e){
+            return response()->json([
+                'message' => 'Validation error occurred while resolving missing quantities.',
+                'error' => $e->getMessage()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error occurred while resolving missing quantities.',
                 'error' => $e->getMessage()
             ], 500);
         }

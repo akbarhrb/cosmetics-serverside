@@ -42,6 +42,7 @@ class ReceiptItemController extends Controller
                 'receipt_id' => 'required|exists:receipts,id',
                 'receipt_items.*.price' => 'required|numeric|min:0',
                 'receipt_items.*.item_id' => 'required|exists:items,id',
+                'receipt_items.*.notes' => 'nullable',
                 'receipt_items.*.quantity' => 'required|integer|min:1',
                 'receipt_items.*.total' => 'required|numeric|min:0',
             ]);

@@ -30,6 +30,7 @@ Route::delete('/delete-category/{cat_id}', [CategoryController::class, 'delete']
 Route::get('/items' , [ItemController::class, 'index']);
 Route::post('/add-item' , [ItemController::class, 'store']);
 Route::put('/update-item/{item_id}' , [ItemController::class, 'update']);
+Route::post('/resolve-missing', [ItemController::class, 'resolveMissingItems']);
 Route::delete('/delete-item/{item_id}' , [ItemController::class, 'destroy']);
 
 //receipts
@@ -50,4 +51,5 @@ Route::put('/receipt-item/{id}', [ReceiptItemController::class, 'update']);
 Route::delete('/receipt-item/{id}', [ReceiptItemController::class, 'destroy']);
 
 //report
+Route::get('/required-items', [ReportController::class, 'requiredItems']);
 Route::post('/report',[ReportController::class, 'index']);
