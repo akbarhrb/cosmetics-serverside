@@ -141,9 +141,9 @@ class ReceiptController
     {
         try {
             $validated = $request->validate([
-                'pharmacy_id'   => 'required|exists:pharmacies,id',
+                'pharmacy_id'   => 'exists:pharmacies,id',
                 'receipt_total' => 'required|numeric|min:0',
-                'status'        => 'required|in:draft,pending,closed,deleted'
+                'status'        => 'in:draft,pending,closed,deleted'
             ]);
 
             $receipt = Receipt::findOrFail($receipt_id);
