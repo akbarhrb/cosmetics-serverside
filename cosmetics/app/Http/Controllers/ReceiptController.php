@@ -208,7 +208,7 @@ class ReceiptController
             return response()->json([
                 'message' => 'Receipt NB' . $receipt->id . ' deleted successfully',
                 'data' => $receipt
-            ], 200);
+            ], 201);
 
         } catch (Exception $e) {
             return response()->json([

@@ -83,7 +83,7 @@ class ReceiptItemController extends Controller
         try {
             $validated = $request->validate([
                 'receipt_id' => 'required|exists:receipts,id',
-                'price'      => 'required|decimal:1,2|min:0',
+                'price'      => 'required',
                 'item_id'    => 'required|exists:items,id',
                 'quantity'   => 'required|integer|min:1',
                 'total'      => 'required|numeric|min:0',
@@ -92,10 +92,14 @@ class ReceiptItemController extends Controller
             $receiptItem = ReceiptItem::findOrFail($id);
             $receiptItem->update($validated);
 
+            $receipt = Receipt::findOrFail($validated['receipt_id']);
+            $receipt->receipt_total = $receipt->receiptItems->sum('total');
+            $receipt->save();
+
             return response()->json([
                 'message' => 'Receipt item updated successfully',
                 'data' => $receiptItem
-            ], 200);
+            ], 201);
 
         } catch (ValidationException $e) {
             return response()->json([
@@ -120,7 +124,7 @@ class ReceiptItemController extends Controller
             return response()->json([
                 'message' => 'Receipt item deleted successfully',
                 'data' => $receiptItem
-            ], 200);
+            ], 201);
 
         } catch (Exception $e) {
             return response()->json([
