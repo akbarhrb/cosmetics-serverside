@@ -24,7 +24,7 @@ Route::delete('/delete-pharmacy/{pharmacy_id}' , [PharmacyController::class, 'de
 Route::get('/categories' , [CategoryController::class, 'index']);
 Route::post('/add-category' , [CategoryController::class, 'store']);
 Route::post('/update-category/{cat_id}', [CategoryController::class, 'update']);
-Route::delete('/delete-category/{cat_id}', [CategoryController::class, 'delete']);
+Route::delete('/delete-category/{cat_id}', [CategoryController::class, 'destroy']);
 
 //items
 Route::get('/items' , [ItemController::class, 'index']);
@@ -43,6 +43,7 @@ Route::patch('/update-r-status/{receipt_id}' , [ReceiptController::class, 'updat
 Route::put('/update-receipt/{receipt_id}' , [ReceiptController::class, 'update']);
 Route::post('/close-receipt', [ReceiptController::class, 'closeReceipt']);
 Route::delete('/delete-receipt/{receipt_id}' , [ReceiptController::class, 'destroy']);
+Route::get('/delete-empty-receipts', [ReceiptController::class, 'deleteEmptyReceipts']);
 
 //receipt-items
 Route::get('/receipt/{receipt_id}/items', [ReceiptItemController::class, 'index']);

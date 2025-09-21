@@ -217,4 +217,22 @@ class ReceiptController
             ], 500);
         }
     }
+    public function deleteEmptyReceipts(){
+        try{
+            $toBeDeleted = Receipt::doesntHave('receiptItems')->get();
+            foreach($toBeDeleted as $receipt){
+                $receipt->delete();
+            }
+            return response()->json([
+                'message' => 'Receipts without items deleted successfully',
+                'count' => count($toBeDeleted)
+            ],200);
+
+        }catch(Exception $e){
+            return response()->json([
+                'message' => 'Unexpected error occurred',
+                'error'   => $e->getMessage()
+            ],500);
+        }
+    }
 }
