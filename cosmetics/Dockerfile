@@ -24,6 +24,10 @@ RUN if [ -f ".env" ]; then php artisan key:generate; fi
 
 # ✅ Run session table migration (if using database session driver)
 RUN php artisan config:clear && php artisan migrate --force
+# Optimize Laravel for production
+RUN php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache
 
 # Entrypoint
 COPY entrypoint.sh /entrypoint.sh
