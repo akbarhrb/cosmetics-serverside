@@ -84,7 +84,7 @@ class CategoryController
 
             return response()->json([
                 'message' => 'Category deleted successfully'
-            ]);
+            ],200);
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'An error occurred while deleting the category',

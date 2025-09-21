@@ -141,9 +141,9 @@ class ReceiptController
     {
         try {
             $validated = $request->validate([
-                'pharmacy_id'   => 'required|exists:pharmacies,id',
+                'pharmacy_id'   => 'exists:pharmacies,id',
                 'receipt_total' => 'required|numeric|min:0',
-                'status'        => 'required|in:draft,pending,closed,deleted'
+                'status'        => 'in:draft,pending,closed,deleted'
             ]);
 
             $receipt = Receipt::findOrFail($receipt_id);
@@ -208,13 +208,31 @@ class ReceiptController
             return response()->json([
                 'message' => 'Receipt NB' . $receipt->id . ' deleted successfully',
                 'data' => $receipt
-            ], 200);
+            ], 201);
 
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Unexpected error occurred',
                 'error'   => $e->getMessage()
             ], 500);
+        }
+    }
+    public function deleteEmptyReceipts(){
+        try{
+            $toBeDeleted = Receipt::doesntHave('receiptItems')->get();
+            foreach($toBeDeleted as $receipt){
+                $receipt->delete();
+            }
+            return response()->json([
+                'message' => 'Receipts without items deleted successfully',
+                'count' => count($toBeDeleted)
+            ],200);
+
+        }catch(Exception $e){
+            return response()->json([
+                'message' => 'Unexpected error occurred',
+                'error'   => $e->getMessage()
+            ],500);
         }
     }
 }
