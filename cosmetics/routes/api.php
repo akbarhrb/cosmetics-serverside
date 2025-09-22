@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health', function () {
     return response()->json(['message' => 'API is working']);
 });
+Route::get('/test-db', function () {
+    return \DB::table('items')->count();
+});
 
 //pharmacies
 Route::get('/pharmacies' , [PharmacyController::class, 'index']);
