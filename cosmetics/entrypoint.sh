@@ -1,11 +1,12 @@
 #!/bin/bash
+set -e
 
 echo "🚀 Starting Laravel App..."
 
-echo "⏳ Waiting for PostgreSQL to be available..."
-until pg_isready -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USERNAME" > /dev/null 2>&1; do
-  >&2 echo "PostgreSQL is unavailable - sleeping"
-  sleep 10
+# Wait for DB (PHP check instead of pg_isready)
+while ! php -r "new PDO('pgsql:host=' . getenv('DB_HOST') . ';port=' . getenv('DB_PORT') . ';dbname=' . getenv('DB_DATABASE') . ';sslmode=require', getenv('DB_USERNAME'), getenv('DB_PASSWORD'));"; do
+  echo "Waiting for database connection..."
+  sleep 5
 done
 
 echo "🧹 Clearing and caching config, routes, and views..."
