@@ -11,24 +11,18 @@ RUN apt-get update && apt-get install -y \
 # Add Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy app source and set permissions
-COPY . /var/www
+# Copy project source with proper ownership
 COPY --chown=www-data:www-data . /var/www
-RUN chmod -R 755 /var/www
 
 # Install PHP dependencies
-RUN composer install
+RUN composer install --no-dev --optimize-autoloader
 
-# Generate app key (optional: only if .env exists inside Docker build)
-RUN if [ -f ".env" ]; then php artisan key:generate; fi
-
-# ✅ Run session table migration (if using database session driver)
-RUN php artisan config:clear && php artisan migrate --force
-
-
-# Entrypoint
+# Entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+# Expose port 8000 (for php artisan serve) or 9000 (FPM)
 EXPOSE 8000
+
+# Use entrypoint to run migrations + start server
 CMD ["/entrypoint.sh"]
