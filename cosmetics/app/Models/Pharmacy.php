@@ -11,6 +11,7 @@ class Pharmacy extends Model
         'pharmacy_owner',
         'phone_number',
         'address',
+        'status',
     ];
     public function receipts(){
         return $this->hasMany(Receipt::class);

@@ -18,7 +18,7 @@ class ReceiptItemController extends Controller
             $receiptItems = ReceiptItem::where('receipt_id', $receipt_id)
                 ->with(['receipt', 'item'])
                 ->get();
-            $pharmacy = Pharmacy::find($receiptItems[0]->receipt);
+            $pharmacy = Pharmacy::find($receiptItems[0]->receipt['pharmacy_id']);
             return response()->json([
                 'message' => 'All receipt items retrieved successfully',
                 'data' => $receiptItems,

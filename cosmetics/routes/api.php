@@ -43,6 +43,7 @@ Route::patch('/update-r-status/{receipt_id}' , [ReceiptController::class, 'updat
 Route::put('/update-receipt/{receipt_id}' , [ReceiptController::class, 'update']);
 Route::post('/close-receipt', [ReceiptController::class, 'closeReceipt']);
 Route::delete('/delete-receipt/{receipt_id}' , [ReceiptController::class, 'destroy']);
+Route::delete('/return-receipt/{receipt_id}' , [ReceiptController::class, 'returnReceipt']);
 Route::get('/delete-empty-receipts', [ReceiptController::class, 'deleteEmptyReceipts']);
 
 //receipt-items
