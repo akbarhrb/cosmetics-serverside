@@ -65,7 +65,7 @@ class PharmacyController
             return response()->json([
                 'message' => 'pharmacy updated successfully',
                 'data' => $pharmacy
-            ],201);
+            ],200);
         }catch(ValidationException $e){
             return response()->json([
                 'message' => 'validation error oocured',

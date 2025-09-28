@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Pharmacy;
 use App\Models\Receipt;
 use App\Models\ReceiptItem;
 use Exception;
@@ -170,8 +171,15 @@ class ReceiptController
     public function closeReceipt(Request $request){
         try{
             $validated = $request->validate([
-                'receipt_id' => 'required|integer|exists:receipts,id'
+                'receipt_id' => 'required|integer|exists:receipts,id',
+                'pharmacy_id' => 'required|integer'
             ]);
+
+            $pharmacy = Pharmacy::findOrFail($validated['pharmacy_id']);
+            $pharmacy->total_orders += 1;
+            $pharmacy->last_order_date = now();
+            $pharmacy->save();
+            
             $receipt = Receipt::findOrFail($validated['receipt_id']);
             $receiptItems = ReceiptItem::where('receipt_id' , $validated['receipt_id'])->get();
 
@@ -203,6 +211,7 @@ class ReceiptController
     {
         try {
             $receipt = Receipt::findOrFail($receipt_id);
+
             $receipt->delete();
 
             return response()->json([
@@ -216,6 +225,30 @@ class ReceiptController
                 'error'   => $e->getMessage()
             ], 500);
         }
+    }
+    public function returnReceipt($receipt_id){
+            try{
+                $receipt = Receipt::findOrFail($receipt_id);
+
+                $pharmacy = Pharmacy::findOrFail($receipt['pharmacy_id']);
+                $pharmacy->total_orders -= 1;
+                $pharmacy->last_order_date = null;
+                
+                $receipt->status = 'deleted';
+
+                $receipt->save();
+                $pharmacy->save();
+
+                return response()->json([
+                'message' => 'Receipt NB' . $receipt->id . ' deleted successfully',
+                'data' => $receipt
+            ], 200);
+            }catch(Exception $e){
+                return response()->json([
+                    'message' => 'Unexpected error occurred',
+                    'error'   => $e->getMessage()
+                ]);
+            }
     }
     public function deleteEmptyReceipts(){
         try{
